@@ -1,0 +1,44 @@
+import customtkinter as ctk
+
+class Taskpage(ctk.CTkFrame):
+
+    def __init__(self,parent):
+        super().__init__(parent)
+
+        self.pack(fill = "both", expand = True)
+
+        title = ctk.CTkLabel(self,text="Task Manager", font=("Arial",25))
+
+        title.pack(pady = 20)
+
+        self.name_entry = ctk.CTkEntry(
+            self,
+            placeholder_text= "Task name"
+        )
+
+        self.name_entry.pack(padx = 20, pady = 0)
+
+        self.description = ctk.CTkEntry(
+            self,
+            placeholder_text= "Description"
+        )
+        self.description.pack(padx = 20, pady = 10)
+
+        self.priority = ctk.CTkEntry(
+            self,
+            placeholder_text= "Priority"
+        )
+        self.priority.pack(padx = 20, pady = 10)
+
+        name= self.priority.get()
+        description = self.description.get()
+        priority = self.priority.get()
+
+        self.add_button = ctk.CTkButton(
+            self,
+            text= "Add Task"
+        )
+        self.add_button.pack(
+            padx = 20,
+            pady = 20
+        )
