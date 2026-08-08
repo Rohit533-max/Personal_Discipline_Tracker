@@ -1,5 +1,5 @@
 from Database.models import Task
-from managers.task_manager import get_tasks, update_task, add_task,del_task,archive_task
+from managers.task_manager import get_tasks, update_task, add_task,del_task
 
 # task = Task("Cricket", "Morning", "Medium")
 # add_task(task)

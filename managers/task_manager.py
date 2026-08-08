@@ -20,7 +20,7 @@ def get_tasks():
     connection = get_connection()
     cursor = connection.cursor()
 
-    cursor.execute("SELECT * FROM Tasks WHERE active = 1")
+    cursor.execute("SELECT * FROM Tasks")
     task = cursor.fetchall()
 
     return task
@@ -69,16 +69,6 @@ def update_task(task_id, new_name = None, new_description = None, new_priority =
     values.append(task_id)
     cursor.execute(query, values)
 
-
-    connection.commit()
-    connection.close()
-
-
-def archive_task(task_id):
-    connection = get_connection()
-    cursor = connection.cursor()
-
-    cursor.execute("UPDATE Tasks SET active = ? WHERE id = ?", (0,task_id))
 
     connection.commit()
     connection.close()

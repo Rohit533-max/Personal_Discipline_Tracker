@@ -1,5 +1,6 @@
 import customtkinter as ctk
 
+from Database.db import create_table
 from UI.taskpage import Taskpage
 
 app = ctk.CTk()
@@ -11,12 +12,12 @@ app.configure(fg_color = "#1D1717")
 task_page = Taskpage(app)
 
 app.mainloop()
-from Database.db import create_table
+# from Database.db import create_table
 
-def main():
-    create_table()
-    print("Database is ready")
+# def main():
+#     create_table()
+#     print("Database is ready")
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
 

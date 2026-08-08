@@ -16,9 +16,7 @@ def create_table():
         name TEXT NOT NULL,
         description TEXT,
         priority TEXT,
-        created_at DATE DEFAULT CURRENT_DATE,
-        active INTEGER DEFAULT 1
-        )
+        created_at DATE DEFAULT CURRENT_DATE)
         """)
 
     connection.commit()

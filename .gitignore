@@ -1,3 +1,4 @@
 .venv
 #personal database 
 personal_discipline_tracker.db
+test.py
