@@ -19,9 +19,21 @@ def create_table():
         created_at DATE DEFAULT CURRENT_DATE)
         """)
 
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS daily_records(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        task_id INTEGER NOT NULL,
+        date DATE NOT NULL,
+        completed INTEGER DEFAULT 0,
+        completed_time TIME,
+        FOREIGN KEY (task_id) REFERENCES tasks(id),
+        UNIQUE(task_id, date)
+        )
+        """)
     connection.commit()
 
     connection.close()
+
 
 if __name__ == "__main__":
     create_table()
