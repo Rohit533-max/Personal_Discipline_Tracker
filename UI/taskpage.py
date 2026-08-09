@@ -1,7 +1,7 @@
 import customtkinter as ctk
 from managers.task_manager import add_task as save_task, get_tasks,del_task
 from Database.models import Task
-from managers.daily_tracker import mark_completed, mark_incomplete
+from managers.daily_tracker import mark_completed, mark_incomplete,get_total_task,get_completed_count,get_completion_percentage
 class Taskpage(ctk.CTkFrame):
 
     def __init__(self,parent):
@@ -12,11 +12,30 @@ class Taskpage(ctk.CTkFrame):
         title = ctk.CTkLabel(self,text="Task Manager", font=("Arial",25))
 
         title.pack(pady = 20)
+#Progress lable
+        self.progress_label = ctk.CTkLabel(
+            self,
+            text="Today's Progress"
+        )
+        self.progress_label.pack(pady = 10)
+
+        self.progress_value_label = ctk.CTkLabel(
+            self,
+            text= "0 / 0 (0%)"
+        )
+        self.progress_value_label.pack(pady = 5)
+
+    #Progress bar
+        self.progress_bar = ctk.CTkProgressBar(
+            self
+        )
+        self.progress_bar.pack(padx = 30, pady = 10, fill = "x")
+
+
 
         self.name_entry = ctk.CTkEntry(
             self,
-            placeholder_text= "Task name"
-        )
+            placeholder_text= "Task name")
 
         self.name_entry.pack(padx = 20, pady = 0)
 
@@ -53,6 +72,7 @@ class Taskpage(ctk.CTkFrame):
             
         )
         self.load_task()
+        self.update_progress()
 
     def add_task(self):
         name = self.name_entry.get()
@@ -84,6 +104,7 @@ class Taskpage(ctk.CTkFrame):
                 task_frame,
                 text = task[1]
             )
+            checkbox.configure(command = lambda task_id = task[0], cb = checkbox: self.toggle_task(task_id,cb))
             checkbox.pack(anchor = "w", padx =10, pady = 5)
 #Put the task name and other values inside the frame..
             name_label = ctk.CTkLabel(
@@ -106,6 +127,19 @@ class Taskpage(ctk.CTkFrame):
                 command = lambda:self.handle_delete(task[0])
             )
             delete_button.pack(padx = 10, pady = 5)
+
+    def update_progress(self):
+        total = get_total_task()
+        completed = get_completed_count()
+        percentage = get_completion_percentage()
+
+        self.progress_value_label.configure(
+            text = f"{completed} / {total} ({percentage: .0f}%)"
+        )
+        self.progress_bar.set(
+            percentage/100
+        )
+
 # after deleting a task we want ui to refresh
     def handle_delete(self,task_id):
         del_task(task_id)
@@ -116,3 +150,5 @@ class Taskpage(ctk.CTkFrame):
             mark_completed(task_id)
         else:
             mark_incomplete(task_id)
+
+        self.update_progress()
