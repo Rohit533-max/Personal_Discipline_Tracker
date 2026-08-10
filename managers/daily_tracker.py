@@ -3,6 +3,30 @@ from Database.db import get_connection
 
 
 
+def create_today_records():
+    now = datetime.now().date().isoformat()
+
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    #get all current task
+    cursor.execute("SELECT id FROM tasks")
+    tasks = cursor.fetchall()
+
+    for task in tasks:
+        task_id = task[0]
+
+        #create today record only if not exist
+        cursor.execute("SELECT id FROM daily_records WHERE task_id = ? AND date = ?", (task_id,now))
+        existing_record = cursor.fetchone()
+
+        if existing_record is None:
+            cursor.execute("""
+            INSERT INTO daily_records
+                (task_id,date,completed) VALUES (?,?,?)""",(task_id,now,0))
+    connection.commit()
+    connection.close()
+
 def mark_completed(task_id):
     now = datetime.now()
     connection = get_connection()
