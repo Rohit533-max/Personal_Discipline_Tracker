@@ -1,8 +1,5 @@
-from managers.daily_tracker import mark_completed
-from managers.task_manager import get_tasks
+from managers.streak import get_successful_dates
 
-tasks = get_tasks()
-for t in tasks:
-    print(t)
-mark_completed(1)
-print("Task marked completed")
+dates = get_successful_dates()
+
+print(dates)

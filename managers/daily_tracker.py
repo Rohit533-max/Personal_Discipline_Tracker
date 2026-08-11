@@ -109,7 +109,7 @@ def get_total_task():
     connection = get_connection()
     cursor = connection.cursor()
 
-    cursor.execute("SELECT COUNT(*) FROM daily_records")
+    cursor.execute("SELECT COUNT(*) FROM tasks")
 
     count = cursor.fetchone()[0]
     connection.close()

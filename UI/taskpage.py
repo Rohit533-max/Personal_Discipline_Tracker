@@ -1,7 +1,7 @@
 import customtkinter as ctk
 from managers.task_manager import add_task as save_task, get_tasks,del_task
 from Database.models import Task
-from managers.daily_tracker import mark_completed, mark_incomplete,get_total_task,get_completed_count,get_completion_percentage
+from managers.daily_tracker import mark_completed, mark_incomplete,get_total_task,get_completed_count,get_completion_percentage, create_today_records
 class Taskpage(ctk.CTkFrame):
 
     def __init__(self,parent):
@@ -71,6 +71,7 @@ class Taskpage(ctk.CTkFrame):
             pady = 20
             
         )
+        create_today_records()
         self.load_task()
         self.update_progress()
 
