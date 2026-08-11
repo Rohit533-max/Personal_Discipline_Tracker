@@ -42,7 +42,7 @@ def get_current_streak():
         expected_date = current_date - timedelta(days=1)
 
         if date == expected_date:
-            steak +=1
+            streak +=1
             current_date = date
 
         else:
