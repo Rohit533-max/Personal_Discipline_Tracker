@@ -1,7 +1,9 @@
 import customtkinter as ctk
 from managers.task_manager import add_task as save_task, get_tasks,del_task
 from Database.models import Task
-from managers.daily_tracker import mark_completed, mark_incomplete,get_total_task,get_completed_count,get_completion_percentage, create_today_records
+from managers.daily_tracker import mark_completed, mark_incomplete,get_total_task,get_completed_count,get_completion_percentage, create_today_records,is_completed
+from managers.streak import get_longest_streak, get_current_streak
+
 class Taskpage(ctk.CTkFrame):
 
     def __init__(self,parent):
@@ -71,10 +73,23 @@ class Taskpage(ctk.CTkFrame):
             pady = 20
             
         )
+        self.current_streak_label = ctk.CTkLabel(
+            self,
+            text="Current Streak: 0"
+        )
+        self.current_streak_label.pack(
+            pady = 10
+        )
+
+        self.longetst_streak_label = ctk.CTkLabel(
+            self,
+            text= "Longest Streak: 0"
+        )
+        self.longetst_streak_label.pack(pady = 10)
         create_today_records()
         self.load_task()
         self.update_progress()
-
+        self.update_streak_display()
     def add_task(self):
         name = self.name_entry.get()
         description = self.description.get()
@@ -82,6 +97,10 @@ class Taskpage(ctk.CTkFrame):
 
         task = Task(name,description,priority)
         save_task(task)
+
+        create_today_records()
+        self.load_task()
+        self.update_progress()
 
     def load_task(self):
         #remove old task frames
@@ -102,10 +121,13 @@ class Taskpage(ctk.CTkFrame):
             )
             #checkbox
             checkbox = ctk.CTkCheckBox(
+            
                 task_frame,
                 text = task[1]
             )
             checkbox.configure(command = lambda task_id = task[0], cb = checkbox: self.toggle_task(task_id,cb))
+            if is_completed(task[0]):
+                checkbox.select()
             checkbox.pack(anchor = "w", padx =10, pady = 5)
 #Put the task name and other values inside the frame..
             name_label = ctk.CTkLabel(
@@ -129,6 +151,31 @@ class Taskpage(ctk.CTkFrame):
             )
             delete_button.pack(padx = 10, pady = 5)
 
+        # self.current_streak_label = ctk.CTkLabel(
+        #     self,
+        #     text="Current Streak: 0"
+        # )
+        # self.current_streak_label.pack(
+        #     pady = 10
+        # )
+
+        # self.longetst_streak_label = ctk.CTkLabel(
+        #     self,
+        #     text= "Longest Streak: 0"
+        # )
+        # self.longetst_streak_label.pack(pady = 10)
+    def update_streak_display(self):
+
+        current = get_current_streak()
+        longest = get_longest_streak()
+
+        self.current_streak_label.configure(
+            text = f"🔥 Current Streak: {current} days"
+        )
+        self.longetst_streak_label.configure(
+            text = f"🏆 Longest Streak: {longest} days"
+        )
+
     def update_progress(self):
         total = get_total_task()
         completed = get_completed_count()
@@ -144,7 +191,11 @@ class Taskpage(ctk.CTkFrame):
 # after deleting a task we want ui to refresh
     def handle_delete(self,task_id):
         del_task(task_id)
+        create_today_records()
         self.load_task()
+        self.update_progress()
+        self.update_streak_display()
+
 
     def toggle_task(self,task_id,checkbox):
         if checkbox.get():
@@ -153,3 +204,4 @@ class Taskpage(ctk.CTkFrame):
             mark_incomplete(task_id)
 
         self.update_progress()
+        self.update_streak_display()

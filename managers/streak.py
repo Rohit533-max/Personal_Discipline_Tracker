@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from history import get_history_dates,get_day_progress
+from managers.history import get_history_dates,get_day_progress
 
 def get_successful_dates():
     successful_dates = []
