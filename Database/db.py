@@ -12,10 +12,14 @@ def create_table():
     cursor = connection.cursor()
 
     cursor.execute("""
-    CREATE TABLE IF NOT EXIST tasks(
-        id INT PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL
+    CREATE TABLE IF NOT EXISTS tasks(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
         priority TEXT NOT NULL)""")
 
     connection.commit()
     connection.close()
+
+if __name__ == "__main__":
+    create_table()
+    print("Database created")
