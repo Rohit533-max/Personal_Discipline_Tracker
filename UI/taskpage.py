@@ -1,6 +1,6 @@
 import customtkinter
 from Database.models import Task
-from managers.task_manager import add_task as save_task, del_task, get_task
+from managers.task_manager import add_task as save_task, del_task, get_task, update_task
 
 class ask_task(customtkinter.CTkFrame):
     def __init__(self,parent):
@@ -46,6 +46,13 @@ class ask_task(customtkinter.CTkFrame):
             )
             delete_button.pack(side = 'right')
 
+            edit_button = customtkinter.CTkButton(
+                task_frame,
+                text="Edit",
+                command= lambda task_id = id, name = name, priority = priority: self.edit_window(task_id,name,priority)
+            )
+            edit_button.pack(side = 'right')
+
 
     def delete(self,task_id):
         del_task(task_id)
@@ -57,4 +64,29 @@ class ask_task(customtkinter.CTkFrame):
         task = Task(name,priority)
         save_task(task)
 
-    
+    def edit_window(self,task_id,curr_name,curr_priority):
+        window = customtkinter.CTkToplevel(self)
+        window.title("Edit Task")
+        window.geometry('400x400')
+
+        edit_name = customtkinter.CTkEntry(window)
+        edit_name.pack(padx = 10, pady = 10)
+
+        #to show current task name
+        edit_name.insert(0,curr_name)
+
+        edit_priority = customtkinter.CTkComboBox(window, values= ['Low', 'Mid', 'High'])
+        edit_priority.pack(padx = 10, pady = 10)
+
+        edit_priority.set(curr_priority)
+
+        save_button = customtkinter.CTkButton(window,text="Save", command= lambda : self.save_edit(
+            window,task_id,edit_name.get(),edit_priority.get()
+        ))
+        save_button.pack(pady =  25)
+
+    def save_edit(self,window,task_id,name,priority):
+        update_task(task_id,name,priority)    
+
+        window.destroy()
+        self.display()
