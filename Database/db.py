@@ -15,7 +15,9 @@ def create_table():
     CREATE TABLE IF NOT EXISTS tasks(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
-        priority TEXT NOT NULL)""")
+        priority TEXT NOT NULL,
+        task_date TEXT NOT NULL,
+        archived INTEGER NOT NULL DEFAULT 0)""")
 
     connection.commit()
     connection.close()
