@@ -52,3 +52,52 @@ def del_task(task_id):
     finally:
         connection.close()
         
+def add_record(task):
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    cursor.execute("INSERT INTO daily_record (task_id,date) VALUES (?,?)",(task['id'],now))
+
+    connection.commit()
+    connection.close()
+
+def get_daily_records():
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    cursor.execute("SELECT * FROM daily_record WHERE date = ?",(now,))
+    daily_records = cursor.fetchall()
+
+    connection.close()
+    return daily_records
+
+def mark_completed(task_id):
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    cursor.execute("UPDATE daily_record SET completed = 1, completed_at = CURRENT_TIMESTAMP WHERE task_id = ? AND date = ?",(task_id,now))
+
+    connection.commit()
+    connection.close()
+
+def mark_incompleted(task_id):
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    cursor.execute("UPDATE daily_record SET completed = 0 WHERE task_id = ? AND date = ?",(task_id,now))
+
+    connection.commit()
+    connection.close()
+
+def is_completed_today(task_id):
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    cursor.execute("SELECT completed from daily_record WHERE task_id = ? AND date = ?",(task_id,now))
+
+    result = cursor.fetchone()
+
+    connection.close()
+    return result if not None and result[0] == 1 else "No Task Found"
+
+
